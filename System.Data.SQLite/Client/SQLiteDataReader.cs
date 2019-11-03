@@ -338,6 +338,10 @@ namespace System.Data.SQLite
 		public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferOffset, int length)
 		{
 			byte[] data = (byte[])(((object[])rows[current_row])[i]);
+			if (fieldOffset >= data.LongLength) {
+				return 0;
+			}
+			
 			if(buffer != null)
 				Array.Copy(data, (int)fieldOffset, buffer, bufferOffset, length);
 			return data.LongLength - fieldOffset;
