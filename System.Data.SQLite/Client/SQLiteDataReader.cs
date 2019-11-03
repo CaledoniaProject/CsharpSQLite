@@ -198,8 +198,16 @@ namespace System.Data.SQLite
 									Guid g;
 									if(data_row[i] == null)
 										data_row[i] = null;
-									else if(Guid.TryParse((string)data_row[i], out g))
-											data_row[i] = g;
+									else {
+										try {
+											g = new Guid((string)data_row[i]);
+											if (g != null)
+												data_row[i] = g;
+										} catch {}
+
+										// if(TryParseGuid((string)data_row[i], out g))
+										// 	data_row[i] = g;
+									}
 								}
 							break;
 						case 4:
