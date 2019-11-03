@@ -337,14 +337,24 @@ namespace System.Data.SQLite
 
 		public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferOffset, int length)
 		{
-			byte[] data = (byte[])(((object[])rows[current_row])[i]);
+			byte[] data  = (byte[])(((object[])rows[current_row])[i]);
+			long copylen = data.LongLength;
+
 			if (fieldOffset >= data.LongLength) {
 				return 0;
 			}
-			
-			if(buffer != null)
-				Array.Copy(data, (int)fieldOffset, buffer, bufferOffset, length);
-			return data.LongLength - fieldOffset;
+
+			if (data.LongLength - fieldOffset > length) {
+				copylen = length - fieldOffset;
+			}
+
+			if (buffer != null)
+			{				
+				Array.Copy(data, (int)fieldOffset, buffer, bufferOffset, copylen);
+				return data.LongLength - fieldOffset;
+			}
+
+			return 0;
 		}
 
 		public override char GetChar(int i)
